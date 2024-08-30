@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('checkout') {
+            steps {
+                script {
+                     git branch:'main',url:'https://github.com/Roshani1812/docker_project.git'
+                }
+            
+            }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    sh '''
+                    #!/bin/bash
+                    echo "Building Docker image..."
+                    docker build -t homework_node_app .
+                    '''
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    sh '''
+                    #!/bin/bash
+                    echo "Running tests..."
+                    docker run --rm homework_node_app npm test
+                    '''
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    sh '''
+                    #!/bin/bash
+                    echo "Deploying Docker container..."
+                    docker run -d -p 3000:3000 --name homework_node_app_container homework_node_app
+                    '''
+                }
+            }
+        }
+    }
+}
