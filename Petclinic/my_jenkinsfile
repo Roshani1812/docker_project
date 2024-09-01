@@ -1,0 +1,35 @@
+pipeline{
+    agent any
+    tools{
+        maven 'maven 3.9.9'
+    }
+        stages{
+            stage('checkout') {
+                steps{
+                    git branch:'main',url:'https://github.com/Roshani1812/docker_project.git'
+                    
+                }
+            }
+                
+                stage('build') {
+                    steps{
+                        sh '''
+                        cd Petclinic
+                        mvn clean compile
+                        '''
+                } 
+                
+               
+            }
+            
+            stage('test'){
+                steps{
+                    sh '''
+                        cd Petclinic
+                        mvn test
+                        '''
+                }
+            }
+            
+        }
+}
