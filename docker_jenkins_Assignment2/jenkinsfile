@@ -1,9 +1,7 @@
+
 pipeline {
     agent any
-    tools { 
-        maven 'Maven_Home' 
-        jdk 'java_home' 
-    }
+    
    
     stages {
         stage('Clone Repository') {
@@ -19,18 +17,18 @@ pipeline {
                 '''
             }
         }
-       
-            
-       
     
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t my-app:v1 .'
+                sh '''
+                cd docker_jenkins_Assignment2
+                docker build -t my-app:${BUILD_ID} .
+                '''
             }
         }
         stage('Run Docker Container') {
             steps {
-                sh 'docker run -d -p 8081:8080 --name my-app-container my-app:v1'
+                sh 'docker run -d -p 8081:8080 --name my-app-container my-app:${BUILD_ID}'
             }
         }
     }
